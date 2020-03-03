@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/qrcode.min.js"></script>
+    <script src="/javascripts/qrcode.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    
+      <input type="text" name="name" id="name1">
+      <input type="text" name="modelno" id="modelno1">
+      <!-- <input type="submit" id="button" value="submit"> -->
+      <button id="button">Submit</button>
+        <a id="imageurl" href="#" download>
+      <div id="output"></div>
+      </a>
+    <script>
+      $(document).ready(()=>{
+        $("#button").click(function(){
+          $.ajax({
+            type:'POST',
+            url:'/',
+            data:{
+              name:$('#name1').val(),
+              modelno:$('#modelno1').val(),
+            },
+            success:(response)=>{
+                // $('.modal-body').empty();
+                // console.log("Recived response");
+                var alldata=  {
+                  id:response.id,
+                  name:response.name,
+                  modelno:response.modelno
+                }
+              var x = JSON.stringify(alldata)
+              var qrcode = new QRCode("output", {
+                  text: x,
+                  width: 256,
+                  height: 256,
+                  colorDark : "#000000",
+                  colorLight : "#ffffff",
+                  correctLevel : QRCode.CorrectLevel.H
+              });        
+            },
+            error:(err)=>console.log(err)
+        })
+        setTimeout(function(){
+        var imgsrc =  $('#output img').attr('src');
+        $("#imageurl").attr("href", imgsrc);
+          }, 100);
+        })
+      })
+    </script>
+  </body>
+</html>
